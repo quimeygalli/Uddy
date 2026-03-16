@@ -39,8 +39,8 @@ class Workflow(models.Model):
 
     Allows to share a bundle of subjects to other users.
     '''
-    creator = models.ForeignKey(User, on_delete=models.CASCADE)
-    users = models.ManyToManyField(User)
+    creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_workflow')
+    users = models.ManyToManyField(User, related_name='workflow')
 
 class Subject(models.Model):
     ''' 
@@ -51,7 +51,7 @@ class Subject(models.Model):
 
     name = models.CharField(max_length=50)
     weekly_study_time = models.IntegerField()
-    workflow = models.ForeignKey(Workflow, on_delete=models.CASCADE)    
+    workflow = models.ForeignKey(Workflow, on_delete=models.CASCADE, related_name='subjects')    
 
 class SubjectDays(models.Model):
     '''
@@ -61,7 +61,7 @@ class SubjectDays(models.Model):
     Solves issue where a subject could not be studied on multiple separate days.    
     '''
 
-    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE, related_name='study_days')
     day = models.IntegerField(
         validators=[MinValueValidator(0), MaxValueValidator(6)]
     )
