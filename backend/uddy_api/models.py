@@ -1,0 +1,67 @@
+from django.db import models
+from django.core.validators import MinValueValidator, MaxValueValidator
+from django.contrib.auth.models import AbstractUser
+
+# Create your models here.
+
+
+ # All times are stored in minutes
+
+class User(AbstractUser):
+    ''' 
+    User model.
+    
+    Username, password, email, verified, weekly_study_time.
+    '''
+
+        # Users must verify themselves via email
+    verified = models.BooleanField(default=False)
+
+        # Defined when signing up and can be changed in user settings
+        # Used as a guide, what really matters is subject time distribution
+    weekly_study_time = models.IntegerField()
+    
+class Friend(models.Model):
+    '''
+    Friend model.
+
+    Contains the sender of the friend request and the recipient.
+    A friend request with a `False` state on the `accepted` column has been sent but not accepted.    
+    '''
+
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_requests')
+    recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_requests')
+    accepted = models.BooleanField(default=False)
+
+class Workflow(models.Model):
+    '''
+    Workflow model.
+
+    Allows to share a bundle of subjects to other users.
+    '''
+    creator = models.ForeignKey(User, on_delete=models.CASCADE)
+    users = models.ManyToManyField(User)
+
+class Subject(models.Model):
+    ''' 
+    Subject model.
+
+    Contains the amount of time a user assigned to the subject and what days they want to study it.
+    '''
+
+    name = models.CharField(max_length=50)
+    weekly_study_time = models.IntegerField()
+    workflow = models.ForeignKey(Workflow, on_delete=models.CASCADE)    
+
+class SubjectDays(models.Model):
+    '''
+    Subject days model.
+
+    Defines what days a subject is studied.
+    Solves issue where a subject could not be studied on multiple separate days.    
+    '''
+
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    day = models.IntegerField(
+        validators=[MinValueValidator(0), MaxValueValidator(6)]
+    )
