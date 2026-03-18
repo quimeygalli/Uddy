@@ -19,7 +19,7 @@ class User(AbstractUser):
 
         # Defined when signing up and can be changed in user settings
         # Used as a guide, what really matters is subject time distribution
-    weekly_study_time = models.IntegerField()
+    weekly_study_time = models.IntegerField(default=0, null=False, validators=[MinValueValidator(0)])
     
 class Friend(models.Model):
     '''
@@ -50,7 +50,7 @@ class Subject(models.Model):
     '''
 
     name = models.CharField(max_length=50)
-    weekly_study_time = models.IntegerField()
+    weekly_study_time = models.IntegerField(validators=[MinValueValidator(0)])
     workflow = models.ForeignKey(Workflow, on_delete=models.CASCADE, related_name='subjects')    
 
 class SubjectDays(models.Model):
