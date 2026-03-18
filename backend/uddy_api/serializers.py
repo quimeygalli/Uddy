@@ -5,7 +5,7 @@ User = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer): # DRF docs are nuts. Thank you guys
     '''
-    
+    Turn JSON data into an object that can be saved
     '''
     class Meta:
         model = User 
