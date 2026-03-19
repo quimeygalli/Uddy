@@ -14,6 +14,7 @@ class User(AbstractUser):
     Username, password, email, verified, weekly_study_time.
     '''
 
+    email = models.EmailField(unique=True)
         # Users must verify themselves via email
     verified = models.BooleanField(default=False)
 
