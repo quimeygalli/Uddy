@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',
     'rest_framework',
     'uddy_api',
     'django.contrib.admin',
@@ -42,6 +43,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -126,7 +128,13 @@ STATIC_URL = 'static/'
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'email@example.com'
-EMAIL_HOST_PASSWORD = 'app_password'
+EMAIL_HOST_USER = 'email@example.com' # Fill with your data, not showing my private info here.
+EMAIL_HOST_PASSWORD = 'app_password' # Just google how to create an app password in gmail.
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
+
+# Talk to frontend
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:5173'
+]

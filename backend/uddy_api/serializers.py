@@ -8,7 +8,7 @@ class UserSerializer(serializers.ModelSerializer): # DRF docs are nuts. Thank yo
     Process sign up data
     '''
 
-    repeat_password = serializers.CharField()
+    repeat_password = serializers.CharField(write_only=True) # Won't work otherwise
     class Meta:
         model = User 
         fields = ['username', 'email', 'password', 'repeat_password']

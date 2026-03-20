@@ -19,11 +19,12 @@ class TestSignUp(APIView):
             user = serializer.save()
             serializer.data['email']
             send_mail(
-                'hello',
-                'body of the message hehe',
-                'elon@email.com',
-                [serializer.data['email']],
-                fail_silently=False
+                subject='Uddy accounts', # TODO; send a confirmation email ->
+                message='This will be a confirmation email.', 
+                    # Sender email... Apparently doesn't really matter
+                from_email='uddy@email.com',
+                    # The user's email.
+                recipient_list=[serializer.data['email']],
             )
             return Response({
                 'message': 'User created', 
