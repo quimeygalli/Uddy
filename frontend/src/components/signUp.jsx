@@ -16,30 +16,44 @@ function SignUpForm() {
   const handleData = (data) => {
     setFormData({
       ...formData,
-      // [] make JS evaluate the expression before inserting the result.
+      // [] makes JSx evaluate the expression befre inserting the result.
       [data.target.name]: data.target.value, // Very interesting React behavior.
     });
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // Check password confirmation
+
+    // Error handling
     if (formData.password != formData.repeat_password) {
+      // Passwords do not match
       setError("Passwords do not match");
+      return;
     }
-    // Add more error checks based in backend responses in the future (username, email)
-    else {
-      setError("");
-      fetch("http://localhost:8000/api/signup", {
-        method: "POST",
-        headers: {
-          // Apparently really important. Should try axious out later
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-      console.log(formData);
+
+    setError("");
+    const response = await fetch("http://localhost:8000/api/signup", {
+      method: "POST",
+      headers: {
+        // Apparently really important. Should try axious out later
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      if (data.email) {
+        console.log(data.email);
+        setError([data.email[0]]);
+      }
+      if (data.username) {
+        setError([data.username[0]]);
+      }
     }
+
+    console.log(data);
   };
 
   return (
@@ -49,8 +63,9 @@ function SignUpForm() {
         onSubmit={handleSubmit}
         className="pt-20 flex items-center justify-center "
       >
-        {error && <p className="text-red-500">{error}</p>}
         <div className="flex flex-col  gap-2 w-50 pb-4 text-amber-50">
+          {error && <p className="text-red-500">{error}</p>}
+
           <label className="">Username</label>
           <input
             required
