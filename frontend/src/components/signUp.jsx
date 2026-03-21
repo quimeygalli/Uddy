@@ -3,6 +3,9 @@ import "../index.css";
 
 // Apparently React functions must start with an uppercase
 function SignUpForm() {
+  // Used to display an error (used email, used username, passwords do not match)
+  const [error, setError] = useState("");
+
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -18,10 +21,25 @@ function SignUpForm() {
     });
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(formData);
-    // TODO; submit data to backend
+    // Check password confirmation
+    if (formData.password != formData.repeat_password) {
+      setError("Passwords do not match");
+    }
+    // Add more error checks based in backend responses in the future (username, email)
+    else {
+      setError("");
+      fetch("http://localhost:8000/api/signup", {
+        method: "POST",
+        headers: {
+          // Apparently really important. Should try axious out later
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      console.log(formData);
+    }
   };
 
   return (
@@ -31,6 +49,7 @@ function SignUpForm() {
         onSubmit={handleSubmit}
         className="pt-20 flex items-center justify-center "
       >
+        {error && <p className="text-red-500">{error}</p>}
         <div className="flex flex-col  gap-2 w-50 pb-4 text-amber-50">
           <label className="">Username</label>
           <input
@@ -46,7 +65,7 @@ function SignUpForm() {
             required
             onChange={handleData}
             className="form_fields"
-            type="text"
+            type="email"
             name="email"
             placeholder="john@example.com"
           />
@@ -57,7 +76,7 @@ function SignUpForm() {
             className="form_fields"
             type="password"
             name="password"
-            placeholder="Min 8 char."
+            placeholder="Min 8 char"
           />
           <label>Repeat Password</label>
           <input

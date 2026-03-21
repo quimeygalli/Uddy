@@ -7,5 +7,5 @@ body {
 
 /* Thank you to [deleted] on reddit for this great tip */
 .form_fields {
-  @apply border border-zinc-400 rounded-md bg-amber-50 placeholder-gray-500 p-2;
+  @apply border border-zinc-400 rounded-md bg-amber-50 placeholder-gray-500 p-2 text-cyan-950;
 }

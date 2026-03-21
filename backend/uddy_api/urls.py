@@ -2,6 +2,6 @@ from django.urls import path
 
 from .views import TestSignUp
 
-urlpatterns = [
-    path('signup/', TestSignUp.as_view())
+urlpatterns = [ # All fetch calls in frontend must start with `/api/`
+    path('signup', TestSignUp.as_view())
 ]
