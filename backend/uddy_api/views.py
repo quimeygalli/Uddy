@@ -4,14 +4,14 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-from uddy_api.serializers import UserSerializer
+from uddy_api.serializers import *
 
 # Create your views here.
 
 class SignUp(APIView):
    
     def post(self, request):
-        serializer = UserSerializer(data=request.data)
+        serializer = SignupUserSerializer(data=request.data)
 
         if serializer.is_valid():
                 # Will call the `create` method inside the serializer because the serializer was called with just `data` as a param
@@ -32,5 +32,21 @@ class SignUp(APIView):
             status=status.HTTP_201_CREATED)
         else:
             print(serializer.errors)
+        
+        return Response(serializer.errors, status=status.HTTP_406_NOT_ACCEPTABLE)
+    
+class SignIn(APIView):
+    
+    def post(self, request):
+        serializer = SigninUserSerializer(data=request.data)
+
+        if serializer.is_valid():
+            user = serializer.validated_data
+            print(user)
+
+            return Response({
+                'message': 'User exists'
+                },
+                status=status.HTTP_202_ACCEPTED)
         
         return Response(serializer.errors, status=status.HTTP_406_NOT_ACCEPTABLE)

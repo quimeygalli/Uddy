@@ -1,9 +1,10 @@
-from django.contrib.auth import get_user_model # Get the custom user
+from django.contrib.auth import get_user_model, authenticate # Get the custom user
 from rest_framework import serializers
+from .models import *
 
 User = get_user_model()
 
-class UserSerializer(serializers.ModelSerializer): # DRF docs are nuts. Thank you guys
+class SignupUserSerializer(serializers.ModelSerializer): # DRF docs are nuts. Thank you guys
     '''
     Process sign up data
     '''
@@ -29,3 +30,27 @@ class UserSerializer(serializers.ModelSerializer): # DRF docs are nuts. Thank yo
     def create(self, validated_data): 
         validated_data.pop('repeat_password')
         return User.objects.create_user(**validated_data)
+
+class SigninUserSerializer(serializers.Serializer):
+    '''
+    Process sign in data
+    '''
+
+    username = serializers.CharField()
+    password = serializers.CharField()
+
+    def validate(self, data):
+        if not data['username']:
+            raise serializers.ValidationError('Must include username')
+        if not data['password']:
+            raise serializers.ValidationError('Must include password')
+        
+        user = authenticate(
+            username=data['username'],
+            password=data['password']
+        )
+
+        if user is None:
+            raise serializers.ValidationError('Invalid information')        
+        
+        return {'user': user}
