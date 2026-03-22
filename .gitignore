@@ -1,6 +1,7 @@
 # Backend
 
 .venv
+.env
 __pycache__
 
 # Frontend
@@ -11,3 +12,4 @@ dist/
 .env.local
 .env.*.local
 
+https://chatgpt.com/
