@@ -3,6 +3,7 @@ from django.core.mail import send_mail
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from django.contrib.auth import login, logout
 
 from uddy_api.serializers import *
 
@@ -42,10 +43,10 @@ class SignIn(APIView):
 
         if serializer.is_valid():
             user = serializer.validated_data
-            print(user)
+            login(request, user['user'])
 
             return Response({
-                'message': 'User exists'
+                'message': 'valid_user' # Frontend can proceed
                 },
                 status=status.HTTP_202_ACCEPTED)
         

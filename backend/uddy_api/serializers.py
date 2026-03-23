@@ -33,7 +33,7 @@ class SignupUserSerializer(serializers.ModelSerializer): # DRF docs are nuts. Th
 
 class SigninUserSerializer(serializers.Serializer):
     '''
-    Process sign in data
+    Processes sign in data and authenticates user 
     '''
 
     username = serializers.CharField()
