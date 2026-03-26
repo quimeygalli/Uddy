@@ -3,7 +3,9 @@ import React from "react";
 function SettingsBtn() {
   return (
     <div>
-      <button className="cursor-pointer">Settings</button>
+      <button className="bg-zinc-400 rounded-md p-1.5 cursor-pointer hover:">
+        Settings
+      </button>
     </div>
   );
 }

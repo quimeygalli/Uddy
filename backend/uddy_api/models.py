@@ -43,6 +43,9 @@ class Workflow(models.Model):
     creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_workflow')
     users = models.ManyToManyField(User, related_name='workflow')
 
+class SubjectCategory(models.Model):
+    name = models.CharField(max_length=50, null=True)
+
 class Subject(models.Model):
     ''' 
     Subject model.
@@ -51,6 +54,8 @@ class Subject(models.Model):
     '''
 
     name = models.CharField(max_length=50)
+    color = models.CharField(max_length=50, default='bg-amber-200')
+    category = models.ForeignKey(SubjectCategory, on_delete=models.CASCADE, related_name='subjects', null=True)
     weekly_study_time = models.IntegerField(validators=[MinValueValidator(0)])
     workflow = models.ForeignKey(Workflow, on_delete=models.CASCADE, related_name='subjects')    
 

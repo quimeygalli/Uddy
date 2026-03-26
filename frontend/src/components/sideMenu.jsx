@@ -15,7 +15,7 @@ function SideMenu() {
           {/* Friends */}
           <FriendList />
         </div>
-        <div>
+        <div className="pt-3">
           {/* Settings */}
           <SettingsBtn />
         </div>
