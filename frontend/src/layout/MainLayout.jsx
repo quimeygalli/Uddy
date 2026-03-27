@@ -6,7 +6,8 @@ const MainLayout = () => {
   return (
     <div className="flex">
       <SideMenu />
-      <main>
+      {/* flex-1 makes it so it fills the whole screen */}
+      <main className="flex-1">
         {/* An outlet acts as a placeholder for nested, children routes */}
         <Outlet />
       </main>

@@ -44,7 +44,15 @@ class Workflow(models.Model):
     users = models.ManyToManyField(User, related_name='workflow')
 
 class SubjectCategory(models.Model):
+    '''
+    All subject must have a category that gives them a color 
+    Categories also allow users to challenge each other
+        Users can only challenge other users to study-offs of the same category
+    '''
+
     name = models.CharField(max_length=50, null=True)
+    color = models.CharField(max_length=50, null=True)
+
 
 class Subject(models.Model):
     ''' 
@@ -54,7 +62,6 @@ class Subject(models.Model):
     '''
 
     name = models.CharField(max_length=50)
-    color = models.CharField(max_length=50, default='bg-amber-200')
     category = models.ForeignKey(SubjectCategory, on_delete=models.CASCADE, related_name='subjects', null=True)
     weekly_study_time = models.IntegerField(validators=[MinValueValidator(0)])
     workflow = models.ForeignKey(Workflow, on_delete=models.CASCADE, related_name='subjects')    
