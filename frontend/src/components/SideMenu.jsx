@@ -1,7 +1,7 @@
 import React from "react";
-import SubjectList from "./Subjects/subjectList";
-import FriendList from "./Friends/friendList";
-import SettingsBtn from "./Settings/settingsBtn";
+import SubjectList from "./Subjects/SubjectList";
+import FriendList from "./Friends/FriendList";
+import SettingsBtn from "./Settings/SettingsBtn";
 
 function SideMenu() {
   return (

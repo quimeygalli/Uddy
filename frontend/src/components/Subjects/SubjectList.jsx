@@ -1,6 +1,6 @@
 import React from "react";
-import SubjectPill from "./subjectPill";
-import AddSubjectBtn from "./addSubjectBtn";
+import SubjectPill from "./SubjectItem";
+import AddSubjectBtn from "./AddSubjectBtn";
 
 function SubjectList() {
   // A list with the user's subjects to be displayed.

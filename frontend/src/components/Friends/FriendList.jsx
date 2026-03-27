@@ -1,5 +1,5 @@
 import React from "react";
-import FriendItem from "./friendItem";
+import FriendItem from "./FriendItem";
 
 function FriendList() {
   // A list with the user's friends to be displayed.
