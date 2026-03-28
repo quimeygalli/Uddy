@@ -54,3 +54,12 @@ class SigninUserSerializer(serializers.Serializer):
             raise serializers.ValidationError('Invalid information')        
         
         return {'user': user}
+
+class CategorySerializer(serializers.ModelSerializer):
+    '''
+    Turns all categories from DB to JSON
+    '''
+
+    class Meta:
+        model = SubjectCategory
+        fields = ['name', 'color']

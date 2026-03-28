@@ -11,9 +11,8 @@ const AddSubject = () => {
       setCategories(categories);
     };
 
-    fetchCategories();
+    getCategories();
   }, []); // We use [] for functions we want to run only when the page loads
-  // TODO; Create backend to send categories
 
   const [formData, setFormData] = useState({
     name: "",
@@ -62,12 +61,20 @@ const AddSubject = () => {
           />
           <label className="">Category</label>
           <select
-            // required
+            required
             onChange={handleData}
             className="form_fields"
             name="category"
-            placeholder=""
-          />
+          >
+            <option className="text-gray-500" value="none" disabled selected>
+              Type of subject
+            </option>
+            {categories.map((category) => (
+              <option key={category.id} value={category.name}>
+                {category.name}
+              </option>
+            ))}
+          </select>
           <button className="group border mt-2 text-cyan-100 border-zinc-400 rounded-md p-1 w-25 bg-mauve-700 hover:bg-mauve-200 cursor-pointer">
             <span className="group-hover:text-cyan-700">Add subject</span>
           </button>

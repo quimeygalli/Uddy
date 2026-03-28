@@ -51,3 +51,11 @@ class SignIn(APIView):
                 status=status.HTTP_202_ACCEPTED)
         
         return Response(serializer.errors, status=status.HTTP_406_NOT_ACCEPTABLE)
+
+class Categories(APIView):
+    
+    def get(self, request):
+        categories = SubjectCategory.objects.all()
+        serializer = CategorySerializer(categories, many=True)
+        print(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)

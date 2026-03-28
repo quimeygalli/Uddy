@@ -53,6 +53,8 @@ class SubjectCategory(models.Model):
     name = models.CharField(max_length=50, null=True)
     color = models.CharField(max_length=50, null=True)
 
+    def __str__(self):
+        return f"{self.name}, {self.color}"
 
 class Subject(models.Model):
     ''' 
