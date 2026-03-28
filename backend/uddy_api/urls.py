@@ -3,7 +3,13 @@ from django.urls import path
 from .views import *
 
 urlpatterns = [ # All fetch calls in frontend must start with `/api/`
+    
+    # Signup / Signin
+
     path('signup', SignUp.as_view()),
     path('signin', SignIn.as_view()),
+
+    # Subject creation
     path('categories', Categories.as_view()),
+    path('create-subject', CreateSubject.as_view()),
 ]

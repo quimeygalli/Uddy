@@ -27,9 +27,21 @@ const AddSubject = () => {
     });
   };
 
-  const createSubject = (event) => {
+  const createSubject = async (event) => {
+    //// TODO; Save the subject on the DB
     event.preventDefault();
     console.log(formData);
+
+    const response = await fetch("http://localhost:8000/api/create-subject", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
+
+    const data = await response.json();
+    console.log(response);
   };
 
   return (
@@ -65,8 +77,9 @@ const AddSubject = () => {
             onChange={handleData}
             className="form_fields"
             name="category"
+            defaultValue="none"
           >
-            <option className="text-gray-500" value="none" disabled selected>
+            <option className="text-gray-500" value="none" disabled>
               Type of subject
             </option>
             {categories.map((category) => (
