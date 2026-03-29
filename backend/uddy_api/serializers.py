@@ -62,4 +62,10 @@ class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SubjectCategory
-        fields = ['name', 'color']
+        fields = ['id', 'name', 'color']
+
+class SubjectSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Subject
+        fields = '__all__'

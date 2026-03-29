@@ -18,9 +18,11 @@ const AddSubject = () => {
     name: "",
     weeklyTime: "",
     category: "",
+    days: "", // TODO; figure how to store days to study
   });
 
   const handleData = (data) => {
+    console.log(data.target.value);
     setFormData({
       ...formData,
       [data.target.name]: data.target.value,
@@ -30,7 +32,7 @@ const AddSubject = () => {
   const createSubject = async (event) => {
     //// TODO; Save the subject on the DB
     event.preventDefault();
-    console.log(formData);
+    // console.log(formData);
 
     const response = await fetch("http://localhost:8000/api/create-subject", {
       method: "POST",
@@ -83,7 +85,7 @@ const AddSubject = () => {
               Type of subject
             </option>
             {categories.map((category) => (
-              <option key={category.id} value={category.name}>
+              <option key={category.id} value={category.id}>
                 {category.name}
               </option>
             ))}

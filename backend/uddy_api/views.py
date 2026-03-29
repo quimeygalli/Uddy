@@ -53,15 +53,22 @@ class SignIn(APIView):
         return Response(serializer.errors, status=status.HTTP_406_NOT_ACCEPTABLE)
 
 class Categories(APIView):
+    '''
+    Sends all categories and their (TailwindCSS) colors
+    '''
     
     def get(self, request):
         categories = SubjectCategory.objects.all()
         serializer = CategorySerializer(categories, many=True)
-        print(serializer.data)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
 class CreateSubject(APIView):
 
+    '''
+    Saves a subject in the DB
+    '''
+
     def post(self, request):
         print(request.data)
+        
         return Response(status=status.HTTP_200_OK)

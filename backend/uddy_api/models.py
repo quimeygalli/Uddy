@@ -34,14 +34,6 @@ class Friend(models.Model):
     recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_requests')
     accepted = models.BooleanField(default=False)
 
-class Workflow(models.Model):
-    '''
-    Workflow model.
-
-    Allows to share a bundle of subjects to other users.
-    '''
-    creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_workflow')
-    users = models.ManyToManyField(User, related_name='workflow')
 
 class SubjectCategory(models.Model):
     '''
@@ -66,7 +58,7 @@ class Subject(models.Model):
     name = models.CharField(max_length=50)
     category = models.ForeignKey(SubjectCategory, on_delete=models.CASCADE, related_name='subjects', null=True)
     weekly_study_time = models.IntegerField(validators=[MinValueValidator(0)])
-    workflow = models.ForeignKey(Workflow, on_delete=models.CASCADE, related_name='subjects')    
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='subjects')    
 
 class SubjectDays(models.Model):
     '''
