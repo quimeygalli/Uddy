@@ -16,9 +16,8 @@ const AddSubject = () => {
 
   const [formData, setFormData] = useState({
     name: "",
-    weeklyTime: "",
-    category: "",
-    days: "", // TODO; figure how to store days to study
+    weekly_study_time: "", // Not really sticking to the naming convention but better for backend
+    category: "none",
   });
 
   const handleData = (data) => {
@@ -39,6 +38,7 @@ const AddSubject = () => {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
       body: JSON.stringify(formData),
     });
 
@@ -63,13 +63,13 @@ const AddSubject = () => {
             name="name"
             placeholder="e.g. Math"
           />
-          <label className="">Weekly study time</label>
+          <label className="">Weekly study time (Hours)</label>
           <input
             required
             onChange={handleData}
             className="form_fields"
             type="number"
-            name="weeklyTime"
+            name="weekly_study_time"
             min="1"
             placeholder="In hours"
           />
@@ -81,7 +81,9 @@ const AddSubject = () => {
             name="category"
             defaultValue="none"
           >
-            <option className="text-gray-500" value="none" disabled>
+            <option className="text-gray-500" value="" disabled>
+              {/* Figure out how to make this work */}
+              {/* Is this even needed? */}
               Type of subject
             </option>
             {categories.map((category) => (

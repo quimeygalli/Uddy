@@ -59,16 +59,3 @@ class Subject(models.Model):
     category = models.ForeignKey(SubjectCategory, on_delete=models.CASCADE, related_name='subjects', null=True)
     weekly_study_time = models.IntegerField(validators=[MinValueValidator(0)])
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='subjects')    
-
-class SubjectDays(models.Model):
-    '''
-    Subject days model.
-
-    Defines what days a subject is studied.
-    Solves issue where a subject could not be studied on multiple separate days.    
-    '''
-
-    subject = models.ForeignKey(Subject, on_delete=models.CASCADE, related_name='study_days')
-    day = models.IntegerField(
-        validators=[MinValueValidator(0), MaxValueValidator(6)]
-    )

@@ -6,4 +6,3 @@ from .models import *
 admin.site.register(User)
 admin.site.register(Friend)
 admin.site.register(Subject)
-admin.site.register(SubjectDays)

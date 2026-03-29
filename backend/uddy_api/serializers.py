@@ -69,3 +69,11 @@ class SubjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subject
         fields = '__all__'
+        read_only_fields = ["user"]
+    
+    def validate(self, data):
+
+            # Convert hours to minutes.
+        data['weekly_study_time'] = data['weekly_study_time'] * 60 
+        
+        return data
