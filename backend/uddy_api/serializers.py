@@ -53,7 +53,7 @@ class SigninUserSerializer(serializers.Serializer):
         if user is None:
             raise serializers.ValidationError('Invalid information')        
         
-        return {'user': user}
+        return {'user': user} # For some reason a dict must be returned
 
 class CategorySerializer(serializers.ModelSerializer):
     '''

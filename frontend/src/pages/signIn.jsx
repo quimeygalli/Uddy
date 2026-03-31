@@ -21,6 +21,7 @@ function SignInForm() {
 
     const response = await fetch("http://localhost:8000/api/signin", {
       method: "POST",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
@@ -30,6 +31,8 @@ function SignInForm() {
     const data = await response.json();
 
     console.log(data);
+    localStorage.setItem("access", data.access);
+    localStorage.setItem("refresh", data.refresh);
   };
 
   return (

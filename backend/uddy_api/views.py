@@ -1,9 +1,10 @@
 from django.core.mail import send_mail
 
 from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
-from django.contrib.auth import login, logout
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from uddy_api.serializers import *
 
@@ -36,19 +37,22 @@ class SignUp(APIView):
         
         return Response(serializer.errors, status=status.HTTP_406_NOT_ACCEPTABLE)
     
+
 class SignIn(APIView):
     
     def post(self, request):
         serializer = SigninUserSerializer(data=request.data)
 
         if serializer.is_valid():
-            user = serializer.validated_data
-            login(request, user['user'])
+            user = serializer.validated_data['user']
+
+                # Create a token
+            refresh = RefreshToken.for_user(user)
 
             return Response({
-                'message': 'valid_user' # Frontend can proceed
-                },
-                status=status.HTTP_202_ACCEPTED)
+                "access": str(refresh.access_token),
+                "refresh": str(refresh),
+            }, status=status.HTTP_200_OK)
         
         return Response(serializer.errors, status=status.HTTP_406_NOT_ACCEPTABLE)
 
@@ -68,9 +72,9 @@ class CreateSubject(APIView):
     Saves a subject in the DB
     '''
 
-    def post(self, request):
+    permission_classes = [IsAuthenticated]
 
-        # TODO; Fix not being signed in.
+    def post(self, request):
 
         print(request.user)
 

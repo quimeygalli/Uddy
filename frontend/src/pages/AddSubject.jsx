@@ -29,21 +29,22 @@ const AddSubject = () => {
   };
 
   const createSubject = async (event) => {
-    //// TODO; Save the subject on the DB
     event.preventDefault();
-    // console.log(formData);
+
+    const token = localStorage.getItem("access");
 
     const response = await fetch("http://localhost:8000/api/create-subject", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`, // Login check.
       },
-      credentials: "include",
       body: JSON.stringify(formData),
     });
 
     const data = await response.json();
     console.log(response);
+    console.log(data);
   };
 
   return (

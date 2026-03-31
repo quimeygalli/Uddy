@@ -128,6 +128,14 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+# Login. Using token validation because is's easier to combine with React.
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+}
+
 # Email backend
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
@@ -145,3 +153,7 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 CORS_ALLOW_CREDENTIALS = True
+
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:5173' 
+]
