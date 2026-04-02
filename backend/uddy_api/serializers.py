@@ -65,6 +65,10 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'color']
 
 class SubjectSerializer(serializers.ModelSerializer):
+
+    '''
+    Saves a subject to the DB
+    '''
     
     class Meta:
         model = Subject
@@ -72,8 +76,15 @@ class SubjectSerializer(serializers.ModelSerializer):
         read_only_fields = ["user"]
     
     def validate(self, data):
-
             # Convert hours to minutes.
         data['weekly_study_time'] = data['weekly_study_time'] * 60 
         
+        return data
+    
+    def to_representation(self, instance): # DRF gets crazy deep.
+        data = super().to_representation(instance)
+
+        if data.get('weekly_study_time') is not None: # Sometimes will not work without this check... Investigate
+            data['weekly_study_time'] = data['weekly_study_time'] / 60
+
         return data

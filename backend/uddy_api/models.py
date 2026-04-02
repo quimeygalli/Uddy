@@ -59,3 +59,6 @@ class Subject(models.Model):
     category = models.ForeignKey(SubjectCategory, on_delete=models.CASCADE, related_name='subjects', null=True)
     weekly_study_time = models.IntegerField(validators=[MinValueValidator(0)])
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='subjects')    
+
+    def __str__(self):
+        return f'Subject: {self.name}, user: {self.user}'

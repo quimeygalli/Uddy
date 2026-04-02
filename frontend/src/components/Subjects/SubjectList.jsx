@@ -1,17 +1,54 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import SubjectPill from "./SubjectItem";
 import AddSubjectBtn from "./AddSubjectBtn";
+import { useNavigate } from "react-router-dom";
 
 function SubjectList() {
-  // A list with the user's subjects to be displayed.
-  // Should also contain the color for the subject
-  const subjectList = ["math", "lengua", "sociales"];
+
+    const [subjects, setSubjects] = useState([]) // useState is very useful
+    const navigate = useNavigate()
+
+    useEffect(() => {
+
+      const token = localStorage.getItem("access");
+
+      if (!token) {
+        navigate("/signin");
+        return;
+      }
+
+      const getSubjects = async () => {
+        try {
+          const response = await fetch(
+            'http://localhost:8000/api/subject-list', {
+            method: 'GET',
+              // Request subject list from user
+            headers: {
+              Authorization: `Bearer ${token}`, // For backend auth.
+            }
+          })
+
+          if (response.status === 401) {
+            navigate("/signin");
+            return;
+          }
+
+          const data = await response.json()
+          setSubjects(data)
+          console.log(data)
+        } catch(error) {
+          console.error(error)
+        }
+      }
+      getSubjects()
+    }, [navigate])
+
   return (
     <div className="pt-3">
       <div className="text-zinc-300">Subjects</div>
       <div>
-        {subjectList.map((element) => (
-          <SubjectPill key={element} subject={element} />
+        {subjects.map((element) => (
+          <SubjectPill key={element.id} subject={element} />
         ))}
       </div>
       <div>

@@ -82,7 +82,7 @@ const AddSubject = () => {
             name="category"
             defaultValue="none"
           >
-            <option className="text-gray-500" value="" disabled>
+            <option className="text-gray-500" value="none" disabled>
               {/* Figure out how to make this work */}
               {/* Is this even needed? */}
               Type of subject

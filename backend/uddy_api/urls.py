@@ -12,4 +12,5 @@ urlpatterns = [ # All fetch calls in frontend must start with `/api/`
     # Subject creation
     path('categories', Categories.as_view()),
     path('create-subject', CreateSubject.as_view()),
+    path('subject-list', SubjectList.as_view()),
 ]

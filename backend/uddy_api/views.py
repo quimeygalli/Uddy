@@ -85,5 +85,24 @@ class CreateSubject(APIView):
         if serializer.is_valid():
             serializer.save(user=request.user)
             return Response(serializer.data, status=201)
+        print(serializer.errors)
 
         return Response(serializer.errors, status=400)
+    
+class SubjectList(APIView):
+
+    '''
+    Query for the subject under a user's id in the DB and send it to the frontend
+    '''
+            # Check if user is authenticated
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+
+        subjects = Subject.objects.filter(user=request.user)
+
+        serializer = SubjectSerializer(subjects, many=True)
+
+        print(subjects)
+        return Response(serializer.data)
+            
