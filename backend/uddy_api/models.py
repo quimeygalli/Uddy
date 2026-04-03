@@ -62,3 +62,20 @@ class Subject(models.Model):
 
     def __str__(self):
         return f'Subject: {self.name}, user: {self.user}'
+    
+class WeeklyStudy(models.Model):
+
+    '''  
+    Saves a study session in the DB.
+
+    Multiple weekly sessions get stored in the same row
+    '''
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    week_start = models.DateField()  # Monday of current week
+    total_minutes = models.IntegerField(default=0)
+
+    class Meta:
+            # Avoid the duplicate sessions. Investigate if bug is caused because npm server is dev
+        unique_together = ("user", "subject", "week_start")

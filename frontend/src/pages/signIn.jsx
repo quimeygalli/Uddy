@@ -30,7 +30,6 @@ function SignInForm() {
 
     const data = await response.json();
 
-    console.log(data);
     localStorage.setItem("access", data.access);
     localStorage.setItem("refresh", data.refresh);
   };

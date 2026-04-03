@@ -1,4 +1,7 @@
 import json
+from datetime import date, timedelta
+
+
 
 from django.core.mail import send_mail
 
@@ -108,3 +111,48 @@ class SubjectList(APIView):
         for subject in serializer.data:
             print(subject['category'])
         return Response(serializer.data)
+
+class AddStudyTime(APIView):
+
+    '''
+    Save a study session to the DB
+    '''
+
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        subject_id = request.data.get("subject_id")
+        minutes = int(request.data.get("minutes", 0))
+
+        if not subject_id or minutes <= 0:
+            return Response({"error": "Invalid data"}, status=400)
+
+        try:
+            subject = Subject.objects.get(id=subject_id, user=request.user)
+        except Subject.DoesNotExist:
+            return Response({"error": "Subject not found"}, status=404)
+
+        # Calculate start of week.
+        today = date.today()
+        first_day = today - timedelta(days=today.weekday())
+
+            # Very useful notation. Would've saved me a lot of time in flexr.
+        session, created = WeeklyStudy.objects.get_or_create(
+            user=request.user,
+            subject=subject,
+            first_day=first_day
+        )
+
+        session.total_minutes += minutes
+        session.save()
+
+        return Response({
+            "subject": subject.name,
+            "first_day": first_day,
+            "total_minutes": session.total_minutes
+        })
+    
+    # TODO; Create a view to compile all recap data 
+        # Username
+        # Subjects and weekly study time goal
+        # Current week study time (per subject)
