@@ -1,3 +1,5 @@
+import json
+
 from django.core.mail import send_mail
 
 from rest_framework.views import APIView
@@ -102,7 +104,7 @@ class SubjectList(APIView):
         subjects = Subject.objects.filter(user=request.user)
 
         serializer = SubjectSerializer(subjects, many=True)
-
-        print(subjects)
+        
+        for subject in serializer.data:
+            print(subject['category'])
         return Response(serializer.data)
-            

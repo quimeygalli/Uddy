@@ -64,11 +64,19 @@ class CategorySerializer(serializers.ModelSerializer):
         model = SubjectCategory
         fields = ['id', 'name', 'color']
 
+class CatrgorySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = SubjectCategory
+        fields = '__all__'
+
 class SubjectSerializer(serializers.ModelSerializer):
 
     '''
     Saves a subject to the DB
     '''
+
+    category = CategorySerializer(read_only=True)
     
     class Meta:
         model = Subject
