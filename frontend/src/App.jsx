@@ -2,9 +2,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./index.css";
 import SignUpForm from "./pages/signUp.jsx";
 import SignInForm from "./pages/signIn.jsx";
-import Homepage from "./pages/HomePage.jsx";
 import AddSubject from "./pages/AddSubject.jsx";
 import MainLayout from "./layout/MainLayout.jsx";
+import RecapPage from "./pages/RecapPage.jsx";
 
 function App() {
   return (
@@ -16,7 +16,7 @@ function App() {
 
         {/* Has a sidebar */}
         <Route element={<MainLayout />}>
-          <Route path="/" element={<Homepage />} />
+          <Route path="/" element={<RecapPage />} />
           <Route path="/add-subject" element={<AddSubject />} />
         </Route>
       </Routes>

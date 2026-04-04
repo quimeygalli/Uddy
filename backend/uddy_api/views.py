@@ -81,10 +81,6 @@ class CreateSubject(APIView):
 
     def post(self, request):
 
-        print(request.user)
-
-        print(request.data)
-
         serializer = SubjectSerializer(data=request.data)
 
         if serializer.is_valid():
@@ -108,8 +104,6 @@ class SubjectList(APIView):
 
         serializer = SubjectSerializer(subjects, many=True)
         
-        for subject in serializer.data:
-            print(subject['category'])
         return Response(serializer.data)
 
 class AddStudyTime(APIView):
@@ -158,10 +152,13 @@ class AddStudyTime(APIView):
         # Current week study time (per subject)
 
 class WeeklyRecap(APIView):
-
+        # Only for auth users
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
+
+        print('hello')
+            # Get all subjects from a user
         subjects = Subject.objects.filter(user=request.user)
 
         serializer = WeeklyRecapSerializer(

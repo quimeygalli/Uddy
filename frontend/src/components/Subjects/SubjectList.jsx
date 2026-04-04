@@ -35,7 +35,6 @@ function SubjectList() {
 
           const data = await response.json()
           setSubjects(data)
-          console.log(data)
         } catch(error) {
           console.error(error)
         }

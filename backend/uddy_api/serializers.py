@@ -99,7 +99,7 @@ class SubjectSerializer(serializers.ModelSerializer):
 
         return data
     
-class WeeklyRecapSerializer(serializers.Serializer):
+class WeeklyRecapSerializer(serializers.ModelSerializer):
     '''
     Checks for last week activity (amount of time studied for each subject)
     '''
@@ -111,18 +111,20 @@ class WeeklyRecapSerializer(serializers.Serializer):
         fields = ["id", "name", "weekly_study_time", "studied_minutes"]
 
     def get_studied_minutes(self, obj):
+            # Passed later
         request = self.context.get("request")
 
+            # Calculate days since week started
         today = date.today()
         week_start = today - timedelta(days=today.weekday())
 
         try:
-            record = WeeklyStudy.objects.get(
+            week = WeeklyStudy.objects.get(
                 user=request.user,
                 subject=obj,
                 week_start=week_start
             )
-            return record.total_minutes
+            return week.total_minutes
         except WeeklyStudy.DoesNotExist:
             # Edge case where a user didnt study at all
             return 0
