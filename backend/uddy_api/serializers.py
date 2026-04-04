@@ -1,3 +1,5 @@
+from datetime import date, timedelta
+
 from django.contrib.auth import get_user_model, authenticate # Get the custom user
 from rest_framework import serializers
 from .models import *
@@ -96,3 +98,31 @@ class SubjectSerializer(serializers.ModelSerializer):
             data['weekly_study_time'] = data['weekly_study_time'] / 60
 
         return data
+    
+class WeeklyRecapSerializer(serializers.Serializer):
+    '''
+    Checks for last week activity (amount of time studied for each subject)
+    '''
+
+    studied_minutes = serializers.SerializerMethodField() # DRF is crazy good
+
+    class Meta:
+        model = Subject
+        fields = ["id", "name", "weekly_study_time", "studied_minutes"]
+
+    def get_studied_minutes(self, obj):
+        request = self.context.get("request")
+
+        today = date.today()
+        week_start = today - timedelta(days=today.weekday())
+
+        try:
+            record = WeeklyStudy.objects.get(
+                user=request.user,
+                subject=obj,
+                week_start=week_start
+            )
+            return record.total_minutes
+        except WeeklyStudy.DoesNotExist:
+            # Edge case where a user didnt study at all
+            return 0

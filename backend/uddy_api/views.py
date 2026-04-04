@@ -156,3 +156,18 @@ class AddStudyTime(APIView):
         # Username
         # Subjects and weekly study time goal
         # Current week study time (per subject)
+
+class WeeklyRecap(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        subjects = Subject.objects.filter(user=request.user)
+
+        serializer = WeeklyRecapSerializer(
+            subjects,
+            many=True,
+            context={"request": request} # Pass extra data, such as user, etc
+        )
+
+        return Response(serializer.data)
