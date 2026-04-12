@@ -1,7 +1,10 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 function SubjectPill({ subject }) {
   // Fixed problem from DB. Note to self, tailwindcss only renders static stuff.
+
+  const goToSubject = useNavigate();
 
   const colorMap = {
     Accounting: "bg-red-200",
@@ -18,10 +21,13 @@ function SubjectPill({ subject }) {
   };
 
   const color = colorMap[subject.category.name];
+  console.log(subject);
 
   return (
     <div
       className={`flex justify-between mt-4 ps-7 pe-7 pt-3 pb-3 rounded-2xl ${color} hover:bg-amber-100 cursor-pointer`}
+      onClick={() => goToSubject(`/subject/${subject.id}`)}
+      id={subject.id}
     >
       <p>{subject.name}</p> {/* Subject name */}
       <button>•••</button> {/* Button to edit */}

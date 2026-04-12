@@ -24,7 +24,7 @@ const RecapPage = () => {
 
   console.log(recapSubject);
   return (
-    <div className="flex h-screen items-center justify-center bg-amber-200">
+    <div className="flex h-screen p-20 items-center justify-center bg-amber-200">
       <div className="flex flex-col justify-center items-center">
         <h1 className="text-5xl font-extrabold text-yellow-600 pb-20">
           Welcome back! Here is your weekly recap:

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import SubjectPill from "./SubjectItem";
 import AddSubjectBtn from "./AddSubjectBtn";
 import { useNavigate } from "react-router-dom";
+import GoToHomepageBtn from "./GoToHomepageBtn";
 
 function SubjectList() {
   const [subjects, setSubjects] = useState([]); // useState is very useful
@@ -42,6 +43,9 @@ function SubjectList() {
   return (
     <div className="pt-3">
       <div className="text-zinc-300">Subjects</div>
+      <div>
+        <GoToHomepageBtn />
+      </div>
       <div>
         {subjects.map((element) => (
           <SubjectPill key={element.id} subject={element} />

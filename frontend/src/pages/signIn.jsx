@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../index.css";
 
 function SignInForm() {
   const [error, setError] = useState("");
+  const goToHomepage = useNavigate();
 
   const [formData, setFormData] = useState({
     username: "",
@@ -32,6 +34,12 @@ function SignInForm() {
 
     localStorage.setItem("access", data.access);
     localStorage.setItem("refresh", data.refresh);
+
+    if (response.ok) {
+      // If the user exists, go to homepage
+
+      goToHomepage("/");
+    }
   };
 
   return (
