@@ -1,10 +1,12 @@
-import { React, useEffect } from "react";
+import { React, useEffect, useState } from "react";
 import { data } from "react-router-dom";
 
 const RecapPage = () => {
-  const token = localStorage.getItem("access");
-  const name = "Quimey";
+  const [recapSubject, setRecapSubject] = useState([]);
 
+  const token = localStorage.getItem("access");
+
+  // Get weeklyRecap data
   const fetchData = async () => {
     const response = await fetch("http://localhost:8000/api/weekly-recap", {
       headers: {
@@ -12,16 +14,52 @@ const RecapPage = () => {
       },
     });
     const data = await response.json();
-    console.log(data);
+    setRecapSubject(data);
   };
 
+  // Get the data as soon as the page is loaded
   useEffect(() => {
     fetchData();
   }, []);
 
+  console.log(recapSubject);
   return (
-    <div className="flex items-center justify-center bg-amber-200">
-      <div>Welcome, {name}</div>
+    <div className="flex h-screen items-center justify-center bg-amber-200">
+      <div className="flex flex-col justify-center items-center">
+        <h1 className="text-5xl font-extrabold text-yellow-600 pb-20">
+          Welcome back! Here is your weekly recap:
+        </h1>
+        <table className="* table text-4xl font-bold border-separate border-spacing-6 text-yellow-700">
+          <thead>
+            <tr>
+              <th>Subject</th>
+              <th>Goal</th>
+            </tr>
+          </thead>
+          <tbody>
+            {recapSubject.map((element) => (
+              // Each object is composed as follows:
+              // {
+              //  id: 1
+              //  name: "Math"
+              //  studied_minutes: 0
+              //  weekly_study_time: 120
+              // }
+              <tr>
+                <td>
+                  <span>{element.name}</span>
+                </td>
+                <td>
+                  <span>
+                    {element.studied_minutes / 60} /{" "}
+                    {element.weekly_study_time / 60} h
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

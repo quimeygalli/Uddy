@@ -39,7 +39,7 @@ class SubjectCategory(models.Model):
     '''
     All subject must have a category that gives them a color 
     Categories also allow users to challenge each other
-        Users can only challenge other users to study-offs of the same category
+        Users can only challenge other users to study-offs of the same category of subject
     '''
 
     name = models.CharField(max_length=50, null=True)

@@ -49,16 +49,16 @@ function SignInForm() {
             className="form_fields"
             type="text"
             name="username"
-            placeholder="John"
+            placeholder="..."
           />
-          <label className="">Username</label>
+          <label className="">Password</label>
           <input
             required
             onChange={handleData}
             className="form_fields"
             type="password"
             name="password"
-            placeholder="John"
+            placeholder="..."
           />
           <button className="border text-cyan-950 border-zinc-400 rounded-md p-1 w-25 bg-cyan-200">
             Sign up

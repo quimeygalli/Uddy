@@ -4,43 +4,40 @@ import AddSubjectBtn from "./AddSubjectBtn";
 import { useNavigate } from "react-router-dom";
 
 function SubjectList() {
+  const [subjects, setSubjects] = useState([]); // useState is very useful
+  const navigate = useNavigate();
 
-    const [subjects, setSubjects] = useState([]) // useState is very useful
-    const navigate = useNavigate()
+  useEffect(() => {
+    const token = localStorage.getItem("access");
 
-    useEffect(() => {
+    if (!token) {
+      navigate("/signin");
+      return;
+    }
 
-      const token = localStorage.getItem("access");
+    const getSubjects = async () => {
+      try {
+        const response = await fetch("http://localhost:8000/api/subject-list", {
+          method: "GET",
+          // Request subject list from user
+          headers: {
+            Authorization: `Bearer ${token}`, // For backend auth.
+          },
+        });
 
-      if (!token) {
-        navigate("/signin");
-        return;
-      }
-
-      const getSubjects = async () => {
-        try {
-          const response = await fetch(
-            'http://localhost:8000/api/subject-list', {
-            method: 'GET',
-              // Request subject list from user
-            headers: {
-              Authorization: `Bearer ${token}`, // For backend auth.
-            }
-          })
-
-          if (response.status === 401) {
-            navigate("/signin");
-            return;
-          }
-
-          const data = await response.json()
-          setSubjects(data)
-        } catch(error) {
-          console.error(error)
+        if (response.status === 401) {
+          navigate("/signin");
+          return;
         }
+
+        const data = await response.json();
+        setSubjects(data);
+      } catch (error) {
+        console.error(error);
       }
-      getSubjects()
-    }, [navigate])
+    };
+    getSubjects();
+  }, [navigate]);
 
   return (
     <div className="pt-3">
