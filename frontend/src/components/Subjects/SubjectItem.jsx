@@ -21,16 +21,16 @@ function SubjectPill({ subject }) {
   };
 
   const color = colorMap[subject.category.name];
-  console.log(subject);
+  // console.log(subject);
 
   return (
     <div
       className={`flex justify-between mt-4 ps-7 pe-7 pt-3 pb-3 rounded-2xl ${color} hover:bg-amber-100 cursor-pointer`}
-      onClick={() => goToSubject(`/subject/${subject.id}`)}
+      //TODO; Figure out how to pass the subject id to the API
+      onClick={() => goToSubject(`/subject/${subject.id}`)} // When clicked, redirects to the subject. Renders `SubjectPage.jsx`
       id={subject.id}
     >
       <p>{subject.name}</p> {/* Subject name */}
-      <button>•••</button> {/* Button to edit */}
     </div>
   );
 }

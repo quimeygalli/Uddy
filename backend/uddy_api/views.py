@@ -113,9 +113,11 @@ class GetSubject(APIView):
         subject_id = request.data.get("subject_id")
         subject = Subject.objects.get(id=subject_id, user=request.user) # User has to be subject's owner in order to access it
 
-        # serializer = #TODO; Check if SubjectSerializer can be reutilized here
+        serializer = SubjectSerializer(subject)
 
-        return
+        print(serializer.data)
+
+        return Response(serializer.data)
 
 class AddStudyTime(APIView):
 

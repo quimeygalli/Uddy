@@ -2,7 +2,14 @@ import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 
 const SubjectPage = (subject) => {
-  // Will display a subject's screen. A subject must be clicked for it to be displayed
+  // Displays a subject's menu.
+  // Includes timer start and end.
+  // Includes Settings for subject (change weekly goal, delete).
+
+  const fetchSubjectData = async () => {
+    const response = await fetch("http://localhost:8000/api/get-subject");
+  };
+
   const { id } = useParams; // For router
   const name = "display.name";
   return (
