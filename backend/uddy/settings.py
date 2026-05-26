@@ -150,6 +150,12 @@ EMAIL_USE_SSL = False
 
 # Talk to frontend
 
+# Source - https://stackoverflow.com/a/67383960
+# Posted by Assem, modified by community. See post 'Timeline' for change history
+# Retrieved 2026-05-22, License - CC BY-SA 4.0
+
+CORS_ORIGIN_ALLOW_ALL = True   
+
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173'
 ]

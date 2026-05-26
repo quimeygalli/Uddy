@@ -92,6 +92,8 @@ class SubjectSerializer(serializers.ModelSerializer):
         return data
     
     def to_representation(self, instance): # DRF gets crazy deep.
+
+        
         data = super().to_representation(instance)
 
         if data.get('weekly_study_time') is not None: # Sometimes will not work without this check... Investigate

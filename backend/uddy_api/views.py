@@ -1,8 +1,6 @@
 import json
 from datetime import date, timedelta
 
-
-
 from django.core.mail import send_mail
 
 from rest_framework.views import APIView
@@ -105,6 +103,19 @@ class SubjectList(APIView):
         serializer = SubjectSerializer(subjects, many=True)
         
         return Response(serializer.data)
+
+class GetSubject(APIView):
+    '''
+    Get a single subject's data
+    '''
+
+    def get(self, request):
+        subject_id = request.data.get("subject_id")
+        subject = Subject.objects.get(id=subject_id, user=request.user) # User has to be subject's owner in order to access it
+
+        # serializer = #TODO; Check if SubjectSerializer can be reutilized here
+
+        return
 
 class AddStudyTime(APIView):
 
