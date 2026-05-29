@@ -109,15 +109,17 @@ class GetSubject(APIView):
     Get a single subject's data
     '''
 
-    def get(self, request):
-        subject_id = request.data.get("subject_id")
-        subject = Subject.objects.get(id=subject_id, user=request.user) # User has to be subject's owner in order to access it
+    def get(self, request, subject_id): # Receive subject_id from the URL path
 
-        serializer = SubjectSerializer(subject)
+        try:
+            subject = Subject.objects.get(id=subject_id, user=request.user)
+            serializer = SubjectSerializer(subject)
 
-        print(serializer.data)
-
-        return Response(serializer.data)
+            return Response(serializer.data)
+        
+        except Subject.DoesNotExist:
+            
+            return Response({"error": "Subject not found"}, status=404)
 
 class AddStudyTime(APIView):
 

@@ -18,7 +18,7 @@ urlpatterns = [ # All fetch calls in frontend must start with `/api/`
     path('categories', Categories.as_view()),
     path('create-subject', CreateSubject.as_view()),
     path('subject-list', SubjectList.as_view()),
-    path('get-subject', GetSubject.as_view()),
+    path('get-subject/<int:subject_id>', GetSubject.as_view()),
     path("add-time", AddStudyTime.as_view()), # Save time to the weekly study table
     path("weekly-recap", WeeklyRecap.as_view()),
 ]
