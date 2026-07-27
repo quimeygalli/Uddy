@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-function SubjectPill({ subject }) {
+function SubjectPill({ subject, onClose }) {
   // Fixed problem from DB. Note to self, tailwindcss only renders static stuff.
 
   const goToSubject = useNavigate();
@@ -27,7 +27,10 @@ function SubjectPill({ subject }) {
     <div
       className={`flex justify-between mt-4 ps-7 pe-7 pt-3 pb-3 rounded-2xl ${color} hover:bg-amber-100 cursor-pointer`}
       //TODO; Figure out how to pass the subject id to the API
-      onClick={() => goToSubject(`/subject/${subject.id}`)} // When clicked, redirects to the subject. Renders `SubjectPage.jsx`
+      onClick={() => {
+        if (onClose) onClose();
+        goToSubject(`/subject/${subject.id}`);
+      }} // When clicked, redirects to the subject. Renders `SubjectPage.jsx`
       id={subject.id}
     >
       <p>{subject.name}</p> {/* Subject name */}

@@ -11,6 +11,7 @@ urlpatterns = [ # All fetch calls in frontend must start with `/api/`
     path('signup', SignUp.as_view()),
     path('signin', SignIn.as_view()),
     path("token-refresh", TokenRefreshView.as_view()),
+    path("logout", LogOut.as_view()),
 
 
     # Subjects
@@ -21,4 +22,10 @@ urlpatterns = [ # All fetch calls in frontend must start with `/api/`
     path('get-subject/<int:subject_id>', GetSubject.as_view()),
     path("add-time", AddStudyTime.as_view()), # Save time to the weekly study table
     path("weekly-recap", WeeklyRecap.as_view()),
+
+    # User & Friends
+    path('me', UserProfile.as_view()),
+    path('friends-list', FriendList.as_view()),
+    path('send-friend-request', SendFriendRequest.as_view()),
+    path('respond-friend-request', RespondFriendRequest.as_view()),
 ]

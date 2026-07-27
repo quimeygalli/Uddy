@@ -2,6 +2,7 @@ import json
 from datetime import date, timedelta
 
 from django.core.mail import send_mail
+from django.db.models import Q
 
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
@@ -42,6 +43,24 @@ class SignUp(APIView):
     
 
 class SignIn(APIView):
+    
+    def post(self, request):
+        serializer = SigninUserSerializer(data=request.data)
+
+        if serializer.is_valid():
+            user = serializer.validated_data['user']
+
+                # Create a token
+            refresh = RefreshToken.for_user(user)
+
+            return Response({
+                "access": str(refresh.access_token),
+                "refresh": str(refresh),
+            }, status=status.HTTP_200_OK)
+        
+        return Response(serializer.errors, status=status.HTTP_406_NOT_ACCEPTABLE)
+class LogOut(APIView):
+
     
     def post(self, request):
         serializer = SigninUserSerializer(data=request.data)
@@ -183,3 +202,98 @@ class WeeklyRecap(APIView):
         )
 
         return Response(serializer.data)
+
+
+class UserProfile(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        serializer = UserSerializer(request.user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class FriendList(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        # Accepted friends where user is sender or recipient
+        accepted_friends = Friend.objects.filter(
+            Q(sender=request.user) | Q(recipient=request.user),
+            accepted=True
+        )
+        # Incoming pending requests where user is recipient
+        incoming_requests = Friend.objects.filter(
+            recipient=request.user,
+            accepted=False
+        )
+
+        friends_data = FriendSerializer(accepted_friends, many=True).data
+        requests_data = FriendSerializer(incoming_requests, many=True).data
+
+        return Response({
+            "friends": friends_data,
+            "incoming_requests": requests_data
+        }, status=status.HTTP_200_OK)
+
+
+class SendFriendRequest(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        recipient_id = request.data.get("recipient_id")
+        if not recipient_id:
+            return Response({"error": "recipient_id is required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            recipient_id = int(recipient_id)
+        except ValueError:
+            return Response({"error": "Invalid recipient ID format."}, status=status.HTTP_400_BAD_REQUEST)
+
+        if recipient_id == request.user.id:
+            return Response({"error": "You cannot send a friend request to yourself."}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            recipient = User.objects.get(id=recipient_id)
+        except User.DoesNotExist:
+            return Response({"error": "User with this ID does not exist."}, status=status.HTTP_404_NOT_FOUND)
+
+        # Check if relationship already exists
+        existing = Friend.objects.filter(
+            Q(sender=request.user, recipient=recipient) | Q(sender=recipient, recipient=request.user)
+        ).first()
+
+        if existing:
+            if existing.accepted:
+                return Response({"error": "You are already friends with this user."}, status=status.HTTP_400_BAD_REQUEST)
+            elif existing.sender == request.user:
+                return Response({"error": "You already sent a friend request to this user."}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response({"error": "This user already sent you a friend request. Check your incoming requests!"}, status=status.HTTP_400_BAD_REQUEST)
+
+        friend_req = Friend.objects.create(sender=request.user, recipient=recipient, accepted=False)
+        serializer = FriendSerializer(friend_req)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class RespondFriendRequest(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        request_id = request.data.get("request_id")
+        action = request.data.get("action")  # 'accept' or 'decline'
+
+        if not request_id or action not in ["accept", "decline"]:
+            return Response({"error": "Valid request_id and action ('accept' or 'decline') are required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            friend_req = Friend.objects.get(id=request_id, recipient=request.user, accepted=False)
+        except Friend.DoesNotExist:
+            return Response({"error": "Friend request not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        if action == "accept":
+            friend_req.accepted = True
+            friend_req.save()
+            return Response({"message": "Friend request accepted."}, status=status.HTTP_200_OK)
+        else:
+            friend_req.delete()
+            return Response({"message": "Friend request declined."}, status=status.HTTP_200_OK)

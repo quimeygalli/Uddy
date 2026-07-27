@@ -57,13 +57,13 @@ function SignUpForm() {
   };
 
   return (
-    <div>
-      <h1 className="text-3xl  font-bold  text-amber-50">Sign up</h1>
+    <div className="min-h-screen p-6 sm:p-12 md:p-20 flex flex-col items-center">
+      <h1 className="text-2xl sm:text-3xl font-bold text-amber-50 text-center">Sign up</h1>
       <form
         onSubmit={handleSubmit}
-        className="pt-20 flex items-center justify-center "
+        className="pt-10 sm:pt-20 flex items-center justify-center w-full"
       >
-        <div className="flex flex-col  gap-2 w-50 pb-4 text-amber-50">
+        <div className="flex flex-col gap-2 w-full max-w-sm px-4 pb-4 text-amber-50">
           {error && <p className="text-red-500">{error}</p>}
 
           <label className="">Username</label>
@@ -102,7 +102,7 @@ function SignUpForm() {
             name="repeat_password"
             placeholder="Just repeat the pw"
           />
-          <button className="border text-cyan-950 border-zinc-400 rounded-md p-1 w-25 bg-cyan-200">
+          <button className="border text-cyan-950 border-zinc-400 rounded-md p-2 w-full bg-cyan-200 mt-4 font-semibold hover:bg-cyan-100 transition-colors cursor-pointer">
             Sign up
           </button>
         </div>

@@ -130,3 +130,18 @@ class WeeklyRecapSerializer(serializers.ModelSerializer):
         except WeeklyStudy.DoesNotExist:
             # Edge case where a user didnt study at all
             return 0
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email', 'verified', 'weekly_study_time']
+
+
+class FriendSerializer(serializers.ModelSerializer):
+    sender = UserSerializer(read_only=True)
+    recipient = UserSerializer(read_only=True)
+
+    class Meta:
+        model = Friend
+        fields = ['id', 'sender', 'recipient', 'accepted']

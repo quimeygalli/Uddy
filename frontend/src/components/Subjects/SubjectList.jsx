@@ -4,7 +4,7 @@ import AddSubjectBtn from "./AddSubjectBtn";
 import { useNavigate } from "react-router-dom";
 import GoToHomepageBtn from "./GoToHomepageBtn";
 
-function SubjectList() {
+function SubjectList({ onClose }) {
   const [subjects, setSubjects] = useState([]); // useState is very useful
   const navigate = useNavigate();
 
@@ -44,15 +44,15 @@ function SubjectList() {
     <div className="pt-3">
       <div className="text-zinc-300">Subjects</div>
       <div>
-        <GoToHomepageBtn />
+        <GoToHomepageBtn onClose={onClose} />
       </div>
       <div>
         {subjects.map((element) => (
-          <SubjectPill key={element.id} subject={element} />
+          <SubjectPill key={element.id} subject={element} onClose={onClose} />
         ))}
       </div>
       <div>
-        <AddSubjectBtn />
+        <AddSubjectBtn onClose={onClose} />
       </div>
     </div>
   );

@@ -48,13 +48,13 @@ const AddSubject = () => {
   };
 
   return (
-    <div className="w-full h-full p-20 bg-blue-100">
-      <h1 className="text-3xl  font-bold  text-slate-600">Create subject</h1>
+    <div className="w-full min-h-screen p-6 sm:p-12 md:p-20 bg-blue-100">
+      <h1 className="text-2xl sm:text-3xl font-bold text-slate-600">Create subject</h1>
       <form
         onSubmit={createSubject}
-        className="pt-20 flex items-center justify-center "
+        className="pt-10 sm:pt-20 flex items-center justify-center w-full"
       >
-        <div className="flex flex-col  gap-2 w-50 pb-4 text-slate-600">
+        <div className="flex flex-col gap-2 w-full max-w-sm px-4 pb-4 text-slate-600">
           <label className="">Name</label>
           <input
             required
@@ -93,7 +93,7 @@ const AddSubject = () => {
               </option>
             ))}
           </select>
-          <button className="group border mt-2 text-cyan-100 border-zinc-400 rounded-md p-1 w-25 bg-mauve-700 hover:bg-mauve-200 cursor-pointer">
+          <button className="group border mt-4 text-cyan-100 border-zinc-400 rounded-md p-2 w-full bg-mauve-700 hover:bg-mauve-200 cursor-pointer transition-colors">
             <span className="group-hover:text-cyan-700">Add subject</span>
           </button>
         </div>
