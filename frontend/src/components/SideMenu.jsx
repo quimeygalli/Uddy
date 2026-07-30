@@ -17,7 +17,7 @@ function SideMenu({ onClose, isMobile = false }) {
         </div>
         <div className="overflow-y-auto">
           {/* Friends */}
-          <FriendList />
+          <FriendList onClose={onClose} />
         </div>
         <div className="pt-3">
           {/* Settings */}

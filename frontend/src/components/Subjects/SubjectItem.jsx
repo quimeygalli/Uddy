@@ -20,7 +20,8 @@ function SubjectPill({ subject, onClose }) {
     Science: "bg-slate-200",
   };
 
-  const color = colorMap[subject.category.name];
+  const categoryName = subject.category?.name;
+  const color = colorMap[categoryName] || "bg-slate-200";
   // console.log(subject);
 
   return (

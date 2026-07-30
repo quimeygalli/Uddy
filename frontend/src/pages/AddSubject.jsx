@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { createRoutesFromChildren } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const AddSubject = () => {
   const [categories, setCategories] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getCategories = async () => {
@@ -42,9 +43,9 @@ const AddSubject = () => {
       body: JSON.stringify(formData),
     });
 
-    const data = await response.json();
-    console.log(response);
-    console.log(data);
+    if (response.ok) {
+      navigate("/");
+    }
   };
 
   return (

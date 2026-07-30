@@ -107,10 +107,11 @@ class WeeklyRecapSerializer(serializers.ModelSerializer):
     '''
 
     studied_minutes = serializers.SerializerMethodField() # DRF is crazy good
+    category = CategorySerializer(read_only=True)
 
     class Meta:
         model = Subject
-        fields = ["id", "name", "weekly_study_time", "studied_minutes"]
+        fields = ["id", "name", "weekly_study_time", "studied_minutes", "category"]
 
     def get_studied_minutes(self, obj):
             # Passed later
@@ -145,3 +146,13 @@ class FriendSerializer(serializers.ModelSerializer):
     class Meta:
         model = Friend
         fields = ['id', 'sender', 'recipient', 'accepted']
+
+
+class ChallengeSerializer(serializers.ModelSerializer):
+    sender = UserSerializer(read_only=True)
+    recipient = UserSerializer(read_only=True)
+    category = CategorySerializer(read_only=True)
+
+    class Meta:
+        model = Challenge
+        fields = ['id', 'sender', 'recipient', 'category', 'status', 'created_at']

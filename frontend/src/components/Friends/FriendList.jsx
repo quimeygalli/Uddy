@@ -3,12 +3,13 @@ import FriendItem from "./FriendItem";
 import AddFriendModal from "./AddFriendModal";
 import { FaPlus, FaCheck, FaXmark } from "react-icons/fa6";
 
-function FriendList() {
+function FriendList({ onClose }) {
   const [friends, setFriends] = useState([]);
   const [incomingRequests, setIncomingRequests] = useState([]);
   const [currentUserId, setCurrentUserId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [challengeSenders, setChallengeSenders] = useState(new Set());
 
   const fetchFriendsData = useCallback(async () => {
     const token = localStorage.getItem("access");
@@ -35,6 +36,18 @@ function FriendList() {
         const data = await res.json();
         setFriends(data.friends || []);
         setIncomingRequests(data.incoming_requests || []);
+      }
+
+      // Fetch pending challenges to show notification dots
+      const challengeRes = await fetch("http://localhost:8000/api/challenges-list", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (challengeRes.ok) {
+        const challengeData = await challengeRes.json();
+        const senderIds = new Set(
+          (challengeData.incoming || []).map((c) => c.sender?.id)
+        );
+        setChallengeSenders(senderIds);
       }
     } catch (err) {
       console.error("Error fetching friends data:", err);
@@ -72,10 +85,10 @@ function FriendList() {
     <div className="pt-4 space-y-4">
       {/* Incoming Friend Requests */}
       {incomingRequests.length > 0 && (
-        <div className="bg-zinc-800/80 p-3 rounded-xl border border-zinc-600/50">
+        <div className="bg-zinc-800 p-3 rounded-xl border border-zinc-600">
           <div className="text-xs font-bold text-amber-300 uppercase tracking-wider mb-2 flex items-center justify-between">
             <span>Incoming Requests</span>
-            <span className="bg-amber-500/20 text-amber-300 px-1.5 py-0.5 rounded-full text-[10px]">
+            <span className="bg-amber-600 text-white px-1.5 py-0.5 rounded-full text-[10px]">
               {incomingRequests.length}
             </span>
           </div>
@@ -83,13 +96,13 @@ function FriendList() {
             {incomingRequests.map((req) => (
               <div
                 key={req.id}
-                className="flex items-center justify-between bg-zinc-700/70 p-2 rounded-lg text-sm border border-zinc-600"
+                className="flex items-center justify-between bg-zinc-700 p-2 rounded-lg text-sm border border-zinc-600"
               >
                 <div className="min-w-0 pr-2">
                   <p className="font-semibold text-zinc-100 truncate">
                     {req.sender?.username}
                   </p>
-                  <p className="text-[11px] text-cyan-300 font-mono">
+                  <p className="text-[11px] text-zinc-400 font-mono">
                     #{req.sender?.id}
                   </p>
                 </div>
@@ -97,14 +110,14 @@ function FriendList() {
                   <button
                     onClick={() => handleRespond(req.id, "accept")}
                     title="Accept"
-                    className="p-1.5 bg-green-600/30 hover:bg-green-600 text-green-300 hover:text-white rounded-md transition-colors cursor-pointer"
+                    className="p-1.5 bg-green-700 hover:bg-green-600 text-white rounded-md transition-colors cursor-pointer"
                   >
                     <FaCheck className="text-xs" />
                   </button>
                   <button
                     onClick={() => handleRespond(req.id, "decline")}
                     title="Decline"
-                    className="p-1.5 bg-red-600/30 hover:bg-red-600 text-red-300 hover:text-white rounded-md transition-colors cursor-pointer"
+                    className="p-1.5 bg-red-700 hover:bg-red-600 text-white rounded-md transition-colors cursor-pointer"
                   >
                     <FaXmark className="text-xs" />
                   </button>
@@ -139,6 +152,9 @@ function FriendList() {
                   key={item.id}
                   name={friendUser?.username || "Unknown"}
                   id={friendUser?.id}
+                  friendUserId={friendUser?.id}
+                  hasPendingChallenge={challengeSenders.has(friendUser?.id)}
+                  onClose={onClose}
                 />
               );
             })}
@@ -169,3 +185,4 @@ function FriendList() {
 }
 
 export default FriendList;
+

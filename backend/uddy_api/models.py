@@ -79,3 +79,27 @@ class WeeklyStudy(models.Model):
     class Meta:
             # Avoid the duplicate sessions. Investigate if bug is caused because npm server is dev
         unique_together = ("user", "subject", "week_start")
+
+
+class Challenge(models.Model):
+    '''
+    Challenge model.
+
+    A user can challenge a friend to study a specific category.
+    Status tracks the lifecycle: pending -> accepted/declined.
+    '''
+
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('accepted', 'Accepted'),
+        ('declined', 'Declined'),
+    ]
+
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_challenges')
+    recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_challenges')
+    category = models.ForeignKey(SubjectCategory, on_delete=models.CASCADE, related_name='challenges')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Challenge: {self.sender} -> {self.recipient} ({self.category.name}) [{self.status}]"

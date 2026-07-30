@@ -6,6 +6,7 @@ import AddSubject from "./pages/AddSubject.jsx";
 import MainLayout from "./layout/MainLayout.jsx";
 import RecapPage from "./pages/RecapPage.jsx";
 import SubjectPage from "./pages/SubjectPage.jsx";
+import ChallengePage from "./pages/ChallengePage.jsx";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/" element={<RecapPage />} />
           <Route path="/add-subject" element={<AddSubject />} />
           <Route path="/subject/:id" element={<SubjectPage />} />
+          <Route path="/challenge/:friendId" element={<ChallengePage />} />
         </Route>
       </Routes>
     </BrowserRouter>
