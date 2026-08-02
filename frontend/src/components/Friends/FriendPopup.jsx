@@ -5,6 +5,7 @@ import { FaCheck, FaXmark } from "react-icons/fa6";
 function FriendPopup({ friendName, friendUserId, onClose, onSideMenuClose }) {
   const navigate = useNavigate();
   const [incomingChallenges, setIncomingChallenges] = useState([]);
+  const [activeChallenges, setActiveChallenges] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -18,11 +19,16 @@ function FriendPopup({ friendName, friendUserId, onClose, onSideMenuClose }) {
         });
         if (res.ok) {
           const data = await res.json();
-          // Filter challenges from this specific friend
           const fromFriend = (data.incoming || []).filter(
             (c) => c.sender?.id === friendUserId
           );
           setIncomingChallenges(fromFriend);
+
+          // Active challenges involving this friend where it is my turn
+          const myActive = (data.active || []).filter(
+            (c) => c.sender?.id === friendUserId || c.recipient?.id === friendUserId
+          );
+          setActiveChallenges(myActive);
         }
       } catch (err) {
         console.error("Error fetching challenges:", err);
@@ -40,6 +46,12 @@ function FriendPopup({ friendName, friendUserId, onClose, onSideMenuClose }) {
     navigate(`/challenge/${friendUserId}?name=${encodeURIComponent(friendName)}`);
   };
 
+  const handleHistory = () => {
+    onClose();
+    if (onSideMenuClose) onSideMenuClose();
+    navigate(`/challenge-history/${friendUserId}?name=${encodeURIComponent(friendName)}`);
+  };
+
   const handleRespond = async (challengeId, action) => {
     const token = localStorage.getItem("access");
     if (!token) return;
@@ -54,13 +66,27 @@ function FriendPopup({ friendName, friendUserId, onClose, onSideMenuClose }) {
         body: JSON.stringify({ challenge_id: challengeId, action }),
       });
       if (res.ok) {
-        setIncomingChallenges((prev) =>
-          prev.filter((c) => c.id !== challengeId)
-        );
+        const data = await res.json();
+        if (action === "accept" && data.challenge) {
+          // Accepted - go study right away
+          onClose();
+          if (onSideMenuClose) onSideMenuClose();
+          navigate(`/challenge-study/${data.challenge.id}`);
+        } else {
+          setIncomingChallenges((prev) =>
+            prev.filter((c) => c.id !== challengeId)
+          );
+        }
       }
     } catch (err) {
       console.error(`Failed to ${action} challenge:`, err);
     }
+  };
+
+  const handleStudyActive = (challengeId) => {
+    onClose();
+    if (onSideMenuClose) onSideMenuClose();
+    navigate(`/challenge-study/${challengeId}`);
   };
 
   return (
@@ -79,6 +105,31 @@ function FriendPopup({ friendName, friendUserId, onClose, onSideMenuClose }) {
             <FaXmark />
           </button>
         </div>
+
+        {/* Active challenges (my turn to study) */}
+        {!loading && activeChallenges.length > 0 && (
+          <div className="mb-4 space-y-2">
+            <p className="text-xs font-bold text-green-300 uppercase tracking-wider mb-1">
+              Your Turn to Study
+            </p>
+            {activeChallenges.map((challenge) => (
+              <div
+                key={challenge.id}
+                className="flex items-center justify-between bg-zinc-800 p-2.5 rounded-xl border border-zinc-600"
+              >
+                <p className="text-sm font-semibold text-zinc-100 truncate">
+                  {challenge.category?.name}
+                </p>
+                <button
+                  onClick={() => handleStudyActive(challenge.id)}
+                  className="text-xs font-bold bg-zinc-600 hover:bg-zinc-500 text-zinc-100 px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
+                >
+                  Study Now
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
 
         {/* Incoming Challenges from this friend */}
         {!loading && incomingChallenges.length > 0 && (
@@ -124,6 +175,12 @@ function FriendPopup({ friendName, friendUserId, onClose, onSideMenuClose }) {
             className="w-full bg-zinc-600 hover:bg-zinc-500 text-zinc-100 font-bold py-2.5 px-4 rounded-xl transition-colors cursor-pointer text-sm"
           >
             Challenge
+          </button>
+          <button
+            onClick={handleHistory}
+            className="w-full bg-zinc-600 hover:bg-zinc-500 text-zinc-100 font-bold py-2.5 px-4 rounded-xl transition-colors cursor-pointer text-sm"
+          >
+            History
           </button>
           <button
             onClick={onClose}

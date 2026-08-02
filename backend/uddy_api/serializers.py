@@ -155,4 +155,4 @@ class ChallengeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Challenge
-        fields = ['id', 'sender', 'recipient', 'category', 'status', 'created_at']
+        fields = ['id', 'sender', 'recipient', 'category', 'status', 'recipient_minutes', 'sender_minutes', 'created_at']

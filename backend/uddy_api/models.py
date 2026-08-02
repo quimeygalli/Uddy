@@ -1,3 +1,5 @@
+import random
+import string
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import AbstractUser
@@ -21,6 +23,24 @@ class User(AbstractUser):
         # Defined when signing up and can be changed in user settings
         # Used as a guide, what really matters is subject time distribution
     weekly_study_time = models.IntegerField(default=0, null=False, validators=[MinValueValidator(0)])
+
+
+def generate_verification_code():
+    return ''.join(random.choices(string.digits, k=6))
+
+
+class EmailVerificationToken(models.Model):
+    '''
+    Stores a 6-digit numeric code linked to a user for email verification.
+    Has no expiry. Deleted once the user verifies their email.
+    '''
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='verification_token')
+    code = models.CharField(max_length=6, default=generate_verification_code)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Verification code for {self.user.username}"
+
     
 class Friend(models.Model):
     '''
@@ -86,19 +106,25 @@ class Challenge(models.Model):
     Challenge model.
 
     A user can challenge a friend to study a specific category.
-    Status tracks the lifecycle: pending -> accepted/declined.
+    Lifecycle: pending -> accepted -> recipient_done -> completed (or declined).
+    When accepted, the recipient studies first and logs their time.
+    Then the sender studies and logs theirs. Both scores are saved.
     '''
 
     STATUS_CHOICES = [
         ('pending', 'Pending'),
         ('accepted', 'Accepted'),
         ('declined', 'Declined'),
+        ('recipient_done', 'Recipient Done'),
+        ('completed', 'Completed'),
     ]
 
     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_challenges')
     recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_challenges')
     category = models.ForeignKey(SubjectCategory, on_delete=models.CASCADE, related_name='challenges')
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    recipient_minutes = models.IntegerField(default=0)
+    sender_minutes = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

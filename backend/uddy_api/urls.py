@@ -10,6 +10,7 @@ urlpatterns = [ # All fetch calls in frontend must start with `/api/`
 
     path('signup', SignUp.as_view()),
     path('signin', SignIn.as_view()),
+    path('verify-code', VerifyCode.as_view()),
     path("token-refresh", TokenRefreshView.as_view()),
     path("logout", LogOut.as_view()),
 
@@ -35,4 +36,6 @@ urlpatterns = [ # All fetch calls in frontend must start with `/api/`
     path('send-challenge', SendChallenge.as_view()),
     path('challenges-list', ChallengesList.as_view()),
     path('respond-challenge', RespondChallenge.as_view()),
+    path('log-challenge-time', LogChallengeTime.as_view()),
+    path('challenge-history/<int:friend_id>', ChallengeHistory.as_view()),
 ]

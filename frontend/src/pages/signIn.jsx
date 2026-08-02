@@ -4,7 +4,7 @@ import "../index.css";
 
 function SignInForm() {
   const [error, setError] = useState("");
-  const goToHomepage = useNavigate();
+  const goToPage = useNavigate();
 
   const [formData, setFormData] = useState({
     username: "",
@@ -20,6 +20,7 @@ function SignInForm() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setError("");
 
     const response = await fetch("http://localhost:8000/api/signin", {
       method: "POST",
@@ -32,13 +33,14 @@ function SignInForm() {
 
     const data = await response.json();
 
-    localStorage.setItem("access", data.access);
-    localStorage.setItem("refresh", data.refresh);
-
     if (response.ok) {
-      // If the user exists, go to homepage
-
-      goToHomepage("/");
+      localStorage.setItem("access", data.access);
+      localStorage.setItem("refresh", data.refresh);
+      goToPage("/");
+    } else if (response.status === 403) {
+      setError(data.error || "Please verify your email before signing in.");
+    } else {
+      setError("Invalid username or password.");
     }
   };
 
@@ -50,26 +52,49 @@ function SignInForm() {
         className="pt-10 sm:pt-20 flex items-center justify-center w-full"
       >
         <div className="flex flex-col gap-2 w-full max-w-sm px-4 pb-4 text-amber-50">
-          <label className="">Username</label>
+          {error && <p className="text-red-400 text-sm text-center">{error}</p>}
+
+          <label>Username</label>
           <input
             required
             onChange={handleData}
             className="form_fields"
             type="text"
             name="username"
+            id="signin-username"
             placeholder="..."
           />
-          <label className="">Password</label>
+          <label>Password</label>
           <input
             required
             onChange={handleData}
             className="form_fields"
             type="password"
             name="password"
+            id="signin-password"
             placeholder="..."
           />
-          <button className="border text-cyan-950 border-zinc-400 rounded-md p-2 w-full bg-cyan-200 mt-4 font-semibold hover:bg-cyan-100 transition-colors cursor-pointer">
+          <button
+            id="signin-submit"
+            className="border text-cyan-950 border-zinc-400 rounded-md p-2 w-full bg-cyan-200 mt-4 font-semibold hover:bg-cyan-100 transition-colors cursor-pointer"
+          >
             Sign in
+          </button>
+
+          {/* Divider */}
+          <div className="flex items-center gap-3 my-1">
+            <hr className="flex-1 border-zinc-600" />
+            <span className="text-zinc-400 text-sm">or</span>
+            <hr className="flex-1 border-zinc-600" />
+          </div>
+
+          <button
+            id="goto-signup"
+            type="button"
+            onClick={() => goToPage("/signup")}
+            className="border border-zinc-500 rounded-md p-2 w-full text-amber-50 font-semibold hover:bg-zinc-700 transition-colors cursor-pointer"
+          >
+            Create an account
           </button>
         </div>
       </form>
